@@ -70,7 +70,7 @@ def train_model(model, ori_model, args, trainset_reader, validset_reader):
         for index, data in enumerate(trainset_reader):
             inputs, lab_tensor = data
             prob = model(inputs)
-            loss = F.nll_loss(prob, lab_tensor, weight=torch.tensor([0.09988, 0.79861, 0.10151]).to(device='cuda'))
+            loss = F.nll_loss(prob, lab_tensor, weight=torch.tensor([1, 8, 1]).to(device='cuda'))
             running_loss += loss.item()
             if args.gradient_accumulation_steps > 1:
                 loss = loss / args.gradient_accumulation_steps
