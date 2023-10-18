@@ -70,7 +70,7 @@ def train_model(model, ori_model, args, trainset_reader, validset_reader):
         for index, data in enumerate(trainset_reader):
             inputs, lab_tensor = data
             prob = model(inputs)
-            loss = F.nll_loss(prob, lab_tensor, weight=torch.tensor([1, 8, 1]).to(device='cuda'))
+            loss = F.nll_loss(prob, lab_tensor, weight=torch.tensor([1.0, 8.0, 1.0]).to(device='cuda'))
             running_loss += loss.item()
             if args.gradient_accumulation_steps > 1:
                 loss = loss / args.gradient_accumulation_steps
@@ -97,8 +97,8 @@ def train_model(model, ori_model, args, trainset_reader, validset_reader):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--patience', type=int, default=20, help='Patience')
-    parser.add_argument('--dropout', type=float, default=0.6, help='Dropout.')
+    parser.add_argument('--patience', type=int, default=5, help='Patience')
+    parser.add_argument('--dropout', type=float, default=0.4, help='Dropout.')
     parser.add_argument('--no-cuda', action='store_true', default=False, help='Disables CUDA training.')
     parser.add_argument('--weight_decay', type=float, default=5e-4, help='Weight decay (L2 loss on parameters).')
     parser.add_argument('--train_path', help='train path')
@@ -124,7 +124,7 @@ if __name__ == "__main__":
     parser.add_argument("--learning_rate", default=5e-5, type=float, help="The initial learning rate for Adam.")
     parser.add_argument("--num_train_epochs", default=3.0, type=float,
                         help="Total number of training epochs to perform.")
-    parser.add_argument("--warmup_proportion", default=0.1, type=float,
+    parser.add_argument("--warmup_proportion", default=0.05, type=float,
                         help="Proportion of training to perform linear learning rate warmup for. E.g., 0.1 = 10% "
                              "of training.")
     parser.add_argument('--gradient_accumulation_steps',
