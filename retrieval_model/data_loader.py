@@ -4,7 +4,7 @@ import numpy as np
 import json
 import re
 from torch.autograd import Variable
-
+import io
 
 def _truncate_seq_pair(tokens_a, tokens_b, max_length):
     """Truncates a sequence pair in place to the maximum length."""
@@ -124,7 +124,7 @@ class DataLoader(object):
 
     def read_file(self, data_path):
         examples = list()
-        with open(data_path) as fin:
+        with io.open(data_path, encoding='utf-8') as fin:
             for step, line in enumerate(fin):
                 sublines = line.strip().split("\t")
                 examples.append([self.process_sent(sublines[0]), self.process_sent(sublines[2]),self.process_sent(sublines[4])])
