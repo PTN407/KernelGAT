@@ -14,7 +14,7 @@ if __name__ == "__main__":
                 data = json.loads(line)
                 claim = data["claim"]
                 for evidence in data["evidence"]:
-                    if evidence[3] >= 1:
+                    if evidence[3] == 1:
                         for evidence_ in data["evidence"]:
                             if evidence_[3] == 0:
                                 sent1 = " ".join(evidence[2].strip().split())
