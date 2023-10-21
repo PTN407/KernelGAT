@@ -4,6 +4,7 @@ import numpy as np
 import json
 import re
 from torch.autograd import Variable
+import io
 
 
 def _truncate_seq_pair(tokens_a, tokens_b, max_length):
@@ -239,7 +240,7 @@ class DataLoaderTest(object):
 
     def read_file(self, data_path):
         examples = list()
-        with open(data_path) as fin:
+        with io.open(data_path, encoding='utf-8') as fin:
             for step, line in enumerate(fin):
                 instance = json.loads(line.strip())
                 claim = instance['claim']
