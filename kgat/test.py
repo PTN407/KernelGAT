@@ -33,7 +33,7 @@ def eval_model(model, label_list, validset_reader, outdir, name):
             assert len(preds) == len(ids)
             for step in range(len(preds)):
                 instance = {"id": ids[step], "predicted_label": label_list[preds[step]]}
-                f.write(json.dumps(instance) + "\n")
+                f.write(json.dumps(instance, ensure_ascii=False) + "\n")
 
 
 
