@@ -16,7 +16,7 @@ if __name__ == "__main__":
                 for evidence in data["evidence"]:
                     if evidence[3] == 1:
                         for evidence_ in data["evidence"]:
-                            if evidence_[3] == 0:
+                            if evidence_[3] != 1:
                                 sent1 = " ".join(evidence[2].strip().split())
                                 sent2 = " ".join(evidence_[2].strip().split())
                                 if sent1 != "" and sent2 != "":
