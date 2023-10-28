@@ -85,9 +85,8 @@ def train_model(model, args, trainset_reader, validset_reader):
                 optimizer.step()
                 optimizer.zero_grad()
                 logger.info('Epoch: {0}, Step: {1}, Loss: {2}'.format(epoch, global_step, (running_loss / global_step)))
-            if global_step % (args.eval_step * args.gradient_accumulation_steps) == 0:
-                torch.save({'epoch': epoch, 'model': model.state_dict()}, save_path + ".best.pt")
-                logger.info("Saved best epoch {0}, best acc {1}".format(epoch, best_acc))
+        torch.save({'epoch': epoch, 'model': model.state_dict()}, save_path + ".best.pt")
+        logger.info("Saved best epoch {0}, best acc {1}".format(epoch, best_acc))
 
 
 
