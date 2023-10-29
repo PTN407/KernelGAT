@@ -17,8 +17,15 @@ import logging
 import json
 import torch.nn as nn
 
+import sys
+
 logger = logging.getLogger(__name__)
 
+stdout_handler = logging.StreamHandler(sys.stdout)
+stdout_handler.setLevel(logging.DEBUG)
+stdout_handler.setFormatter(formatter)
+
+logger.addHandler(stdout_handler)
 
 def warmup_linear(x, warmup=0.002):
     if x < warmup:
