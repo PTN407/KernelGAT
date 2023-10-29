@@ -8,12 +8,6 @@ from tqdm import tqdm
 from torch.autograd import Variable
 from pytorch_pretrained_bert.tokenization import whitespace_tokenize, BasicTokenizer, BertTokenizer
 from pytorch_pretrained_bert.optimization import BertAdam
-
-try:    
-    from perc import Perc
-except Exception:
-    import tqdm
-    Perc = tqdm.tqdm
 from models import inference_model
 from data_loader import DataLoader, DataLoaderTest
 from bert_model import BertForSequenceEncoder
@@ -21,19 +15,12 @@ from torch.nn import NLLLoss
 import logging
 import json
 import torch.nn as nn
+import tqdm
 
 import sys
 
-stdout_handler = logging.StreamHandler(stream=sys.stdout)
-handlers = [stdout_handler]
-
-logging.basicConfig(
-    level=logging.DEBUG, 
-    format='[%(asctime)s] {%(filename)s:%(lineno)d} %(levelname)s - %(message)s',
-    handlers=handlers
-)
-
 logger = logging.getLogger(__name__)
+
 
 def warmup_linear(x, warmup=0.002):
     if x < warmup:
@@ -85,7 +72,7 @@ def train_model(model, args, trainset_reader, validset_reader):
     crit = nn.MarginRankingLoss(margin=1)
     for epoch in range(int(args.num_train_epochs)):
         optimizer.zero_grad()
-        for inp_tensor_pos, msk_tensor_pos, seg_tensor_pos, inp_tensor_neg, msk_tensor_neg, seg_tensor_neg in Perc(trainset_reader):
+        for inp_tensor_pos, msk_tensor_pos, seg_tensor_pos, inp_tensor_neg, msk_tensor_neg, seg_tensor_neg in tqdm.tqdm(trainset_reader):
             model.train()
             score_pos = model(inp_tensor_pos, msk_tensor_pos, seg_tensor_pos)
             score_neg = model(inp_tensor_neg, msk_tensor_neg, seg_tensor_neg)
@@ -142,9 +129,14 @@ if __name__ == "__main__":
     if not os.path.exists(args.outdir):
         os.mkdir(args.outdir)
     args.cuda = not args.no_cuda and torch.cuda.is_available()
-    handlers = [logging.FileHandler(os.path.abspath(args.outdir) + '/train_log.txt'), logging.StreamHandler()]
-    logging.basicConfig(format='[%(asctime)s] %(levelname)s: %(message)s', level=logging.DEBUG,
-                        datefmt='%d-%m-%Y %H:%M:%S', handlers=handlers)
+    stdout_handler = logging.StreamHandler(stream=sys.stdout)
+    handlers = [stdout_handler]
+    logging.basicConfig(
+        level=logging.DEBUG, 
+        format='[%(asctime)s] {%(filename)s:%(lineno)d} %(levelname)s - %(message)s',
+        handlers=handlers
+    )
+    
     logger.info(args)
     logger.info('Start training!')
 
