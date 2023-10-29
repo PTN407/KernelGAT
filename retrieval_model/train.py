@@ -19,13 +19,16 @@ import torch.nn as nn
 
 import sys
 
+stdout_handler = logging.StreamHandler(stream=sys.stdout)
+handlers = [stdout_handler]
+
+logging.basicConfig(
+    level=logging.DEBUG, 
+    format='[%(asctime)s] {%(filename)s:%(lineno)d} %(levelname)s - %(message)s',
+    handlers=handlers
+)
+
 logger = logging.getLogger(__name__)
-
-stdout_handler = logging.StreamHandler(sys.stdout)
-stdout_handler.setLevel(logging.DEBUG)
-stdout_handler.setFormatter(formatter)
-
-logger.addHandler(stdout_handler)
 
 def warmup_linear(x, warmup=0.002):
     if x < warmup:
