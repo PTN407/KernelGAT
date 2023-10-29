@@ -12,8 +12,8 @@ from pytorch_pretrained_bert.optimization import BertAdam
 try:    
     from perc import Perc
 except Exception:
-    !pip install perc
-    from perc import Perc
+    import tqdm
+    Perc = tqdm.tqdm
 from models import inference_model
 from data_loader import DataLoader, DataLoaderTest
 from bert_model import BertForSequenceEncoder
