@@ -8,8 +8,12 @@ from tqdm import tqdm
 from torch.autograd import Variable
 from pytorch_pretrained_bert.tokenization import whitespace_tokenize, BasicTokenizer, BertTokenizer
 from pytorch_pretrained_bert.optimization import BertAdam
-from tqdm.notebook import tqdm
 
+try:    
+    from perc import Perc
+except Exception:
+    !pip install perc
+    from perc import Perc
 from models import inference_model
 from data_loader import DataLoader, DataLoaderTest
 from bert_model import BertForSequenceEncoder
@@ -81,7 +85,7 @@ def train_model(model, args, trainset_reader, validset_reader):
     crit = nn.MarginRankingLoss(margin=1)
     for epoch in range(int(args.num_train_epochs)):
         optimizer.zero_grad()
-        for inp_tensor_pos, msk_tensor_pos, seg_tensor_pos, inp_tensor_neg, msk_tensor_neg, seg_tensor_neg in tqdm(trainset_reader):
+        for inp_tensor_pos, msk_tensor_pos, seg_tensor_pos, inp_tensor_neg, msk_tensor_neg, seg_tensor_neg in Perc(trainset_reader):
             model.train()
             score_pos = model(inp_tensor_pos, msk_tensor_pos, seg_tensor_pos)
             score_neg = model(inp_tensor_neg, msk_tensor_neg, seg_tensor_neg)
