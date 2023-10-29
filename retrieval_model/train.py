@@ -8,7 +8,7 @@ from tqdm import tqdm
 from torch.autograd import Variable
 from pytorch_pretrained_bert.tokenization import whitespace_tokenize, BasicTokenizer, BertTokenizer
 from pytorch_pretrained_bert.optimization import BertAdam
-from tqdm import tqdm
+import tqdm
 
 from models import inference_model
 from data_loader import DataLoader, DataLoaderTest
@@ -81,7 +81,7 @@ def train_model(model, args, trainset_reader, validset_reader):
     crit = nn.MarginRankingLoss(margin=1)
     for epoch in range(int(args.num_train_epochs)):
         optimizer.zero_grad()
-        for inp_tensor_pos, msk_tensor_pos, seg_tensor_pos, inp_tensor_neg, msk_tensor_neg, seg_tensor_neg in tqdm(trainset_reader):
+        for inp_tensor_pos, msk_tensor_pos, seg_tensor_pos, inp_tensor_neg, msk_tensor_neg, seg_tensor_neg in tqdm.notebook.tqdm(trainset_reader):
             model.train()
             score_pos = model(inp_tensor_pos, msk_tensor_pos, seg_tensor_pos)
             score_neg = model(inp_tensor_neg, msk_tensor_neg, seg_tensor_neg)
