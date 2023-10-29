@@ -68,7 +68,7 @@ def train_model(model, ori_model, args, trainset_reader, validset_reader):
     for epoch in range(int(args.num_train_epochs)):
         model.train()
         optimizer.zero_grad()
-        for index, data in enumerate(tqdm(trainset_reader)):
+        for index, data in enumerate(tqdm.tqdm(trainset_reader)):
             inputs, lab_tensor = data
             prob = model(inputs)
             loss = F.nll_loss(prob, lab_tensor)
