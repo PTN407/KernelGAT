@@ -90,9 +90,9 @@ def train_model(model, ori_model, args, trainset_reader, validset_reader):
                 if eval_acc >= best_accuracy:
                     best_accuracy = eval_acc
                     torch.save({'epoch': epoch,
-                                'model': model.state_dict()}, save_path + ".best.pt")
-                    logger.info("Saved best epoch {0}, best acc {1}".format(epoch, best_acc))
-                    print("Saved best epoch {0}, best acc {1}".format(epoch, best_acc))
+                                'model': ori_model.state_dict()}, save_path + ".best.pt")
+                    logger.info("Saved best epoch {0}, best acc {1}".format(epoch, best_accuracy))
+                    print("Saved best epoch {0}, best acc {1}".format(epoch, best_accuracy))
 
 
 if __name__ == "__main__":
