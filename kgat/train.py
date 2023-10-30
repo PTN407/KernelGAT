@@ -87,8 +87,8 @@ def train_model(model, ori_model, args, trainset_reader, validset_reader):
                 logger.info('Start eval!')
                 eval_acc = eval_model(model, validset_reader)
                 logger.info('Dev acc: {0}'.format(eval_acc))
-                if eval_acc >= best_acc:
-                    best_acc = eval_acc
+                if eval_acc >= best_accuracy:
+                    best_accuracy = eval_acc
                     torch.save({'epoch': epoch,
                                 'model': model.state_dict()}, save_path + ".best.pt")
                     logger.info("Saved best epoch {0}, best acc {1}".format(epoch, best_acc))
