@@ -91,6 +91,7 @@ def train_model(model, args, trainset_reader, validset_reader):
                 torch.save({'epoch': epoch,
                             'model': model.state_dict()}, save_path + ".best.pt")
                 logger.info("Saved best epoch {0}, best acc {1}".format(epoch, best_acc))
+                print("Saved best epoch {0}, best acc {1}".format(epoch, best_acc))
 
 
 
