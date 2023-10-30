@@ -81,6 +81,8 @@ def train_model(model, ori_model, args, trainset_reader, validset_reader):
                 optimizer.step()
                 optimizer.zero_grad()
                 logger.info('Epoch: {0}, Step: {1}, Loss: {2}'.format(epoch, global_step, (running_loss / global_step)))
+                if global_step % (100 // args.gradient_accumulation_steps * args.gradient_accumulation_steps) == 0:
+                    print('Epoch: {0}, Step: {1}, Loss: {2}'.format(epoch, global_step, (running_loss / global_step)))
         logger.info('Start eval!')
         with torch.no_grad():
             dev_accuracy = eval_model(model, validset_reader)
@@ -92,7 +94,7 @@ def train_model(model, ori_model, args, trainset_reader, validset_reader):
                             'model': ori_model.state_dict(),
                             'best_accuracy': best_accuracy}, save_path + ".best.pt")
                 logger.info("Saved best epoch {0}, best accuracy {1}".format(epoch, best_accuracy))
-
+                print("Saved best epoch {0}, best accuracy {1}".format(epoch, best_accuracy))
 
 
 if __name__ == "__main__":
