@@ -71,7 +71,7 @@ def train_model(model, ori_model, args, trainset_reader, validset_reader):
         for index, data in enumerate(tqdm.tqdm(trainset_reader)):
             inputs, lab_tensor = data
             prob = model(inputs)
-            loss = F.poisson_nll_loss(prob, lab_tensor)
+            loss = F.multilabel_margin_loss(prob, lab_tensor)
             running_loss += loss.item()
             if args.gradient_accumulation_steps > 1:
                 loss = loss / args.gradient_accumulation_steps
