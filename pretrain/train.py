@@ -76,27 +76,29 @@ def train_model(model, args, trainset_reader, validset_reader):
                 optimizer.step()
                 optimizer.zero_grad()
                 logger.info('Epoch: {0}, Step: {1}, Loss: {2}'.format(epoch, global_step, (running_loss / global_step)))
-                if global_step % (100 // args.gradient_accumulation_steps * args.gradient_accumulation_steps) == 0:
-                    print('Epoch: {0}, Step: {1}, Loss: {2}'.format(epoch, global_step, (running_loss / global_step)))
-                    if global_step % (500 // args.gradient_accumulation_steps * args.gradient_accumulation_steps) == 0:
-                        with torch.no_grad():
-                            dev_accuracy = eval_model(model, validset_reader)
-                            print('Dev total acc: {0}'.format(dev_accuracy))
-        if global_step % (args.eval_step * args.gradient_accumulation_steps) == 0:
-            logger.info('Start eval!')
-            eval_acc = eval_model(model, validset_reader)
-            logger.info('Dev acc: {0}'.format(eval_acc))
-            if eval_acc >= best_acc:
-                best_acc = eval_acc
-                torch.save({'epoch': epoch,
-                            'model': model.state_dict()}, save_path + ".best.pt")
-                logger.info("Saved best epoch {0}, best acc {1}".format(epoch, best_acc))
-                print("Saved best epoch {0}, best acc {1}".format(epoch, best_acc))
+            if global_step % args.loss_print_step == 0:
+                print('Epoch: {0}, Step: {1}, Loss: {2}'.format(epoch, global_step, (running_loss / global_step)))
+            if global_step % args.acc_print_step == 0:
+                with torch.no_grad():
+                    dev_accuracy = eval_model(model, validset_reader)
+                    print('Dev total acc: {0}'.format(dev_accuracy))
+            if global_step % (args.eval_step * args.gradient_accumulation_steps) == 0:
+                logger.info('Start eval!')
+                eval_acc = eval_model(model, validset_reader)
+                logger.info('Dev acc: {0}'.format(eval_acc))
+                if eval_acc >= best_acc:
+                    best_acc = eval_acc
+                    torch.save({'epoch': epoch,
+                                'model': model.state_dict()}, save_path + ".best.pt")
+                    logger.info("Saved best epoch {0}, best acc {1}".format(epoch, best_acc))
+                    print("Saved best epoch {0}, best acc {1}".format(epoch, best_acc))
 
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
+    parser.add_argument('--acc_print_step', type=int, default=500, help='step to print dev acc.')
+    parser.add_argument('--loss_print_step', type=int, default=100, help='step to print train loss.')
     parser.add_argument('--dropout', type=float, default=0.6, help='Dropout.')
     parser.add_argument('--no-cuda', action='store_true', default=False, help='Disables CUDA training.')
     parser.add_argument('--train_path', help='train path')
