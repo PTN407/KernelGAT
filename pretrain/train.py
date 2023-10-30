@@ -65,7 +65,7 @@ def train_model(model, args, trainset_reader, validset_reader):
     crit = nn.CrossEntropyLoss()
     for epoch in range(int(args.num_train_epochs)):
         optimizer.zero_grad()
-        for inp_tensor, msk_tensor, seg_tensor, label_tensor in trainset_reader:
+        for inp_tensor, msk_tensor, seg_tensor, label_tensor in tqdm(trainset_reader):
             model.train()
             prob = model(inp_tensor, msk_tensor, seg_tensor)
             loss = crit(prob, label_tensor)
