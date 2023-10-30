@@ -13,7 +13,7 @@ from pytorch_pretrained_bert.optimization import BertAdam
 from models import inference_model
 from data_loader import DataLoader
 from bert_model import BertForSequenceEncoder
-from torch.nn import NLLLoss
+from torch.nn import NLLLoss, GaussianNLLLoss, PoissonNLLLoss
 import logging
 import tqdm
 
@@ -71,7 +71,7 @@ def train_model(model, ori_model, args, trainset_reader, validset_reader):
         for index, data in enumerate(tqdm.tqdm(trainset_reader)):
             inputs, lab_tensor = data
             prob = model(inputs)
-            loss = F.nll_loss(prob, lab_tensor)
+            loss = F.GaussianNLLLoss(prob, lab_tensor)
             running_loss += loss.item()
             if args.gradient_accumulation_steps > 1:
                 loss = loss / args.gradient_accumulation_steps
