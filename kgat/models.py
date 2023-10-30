@@ -63,8 +63,8 @@ class inference_model(nn.Module):
             Linear(128, 1)
         )
         self.proj_select = nn.Linear(self.kernel, 1)
-        self.mu = Variable(torch.FloatTensor(kernal_mus(self.kernel)), requires_grad = False).view(1, 1, 1, 21).cuda()
-        self.sigma = Variable(torch.FloatTensor(kernel_sigmas(self.kernel)), requires_grad = False).view(1, 1, 1, 21).cuda()
+        self.mu = Variable(torch.FloatTensor(kernal_mus(self.kernel)), requires_grad = False).view(1, 1, 1, self.kernel).cuda()
+        self.sigma = Variable(torch.FloatTensor(kernel_sigmas(self.kernel)), requires_grad = False).view(1, 1, 1, self.kernel).cuda()
 
 
     def self_attention(self, inputs, inputs_hiddens, mask, mask_evidence, index):
