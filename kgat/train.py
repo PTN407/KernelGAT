@@ -83,6 +83,10 @@ def train_model(model, ori_model, args, trainset_reader, validset_reader):
                 with torch.no_grad():
                     dev_accuracy = eval_model(model, validset_reader)
                     print('Dev total acc: {0}'.format(dev_accuracy))
+            if global_step % args.gradient_accumulation_steps == 0:
+                optimizer.step()
+                optimizer.zero_grad()
+                logger.info('Epoch: {0}, Step: {1}, Loss: {2}'.format(epoch, global_step, (running_loss / global_step)))
             if global_step % (args.eval_step * args.gradient_accumulation_steps) == 0:
                 logger.info('Start eval!')
                 with torch.no_grad():
